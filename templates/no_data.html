@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}No Data Available - Discord Server Info{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h2>No Server Data Available</h2>
+            </div>
+            <div class="card-body text-center">
+                <p class="lead">No Discord server data has been exported yet.</p>
+                <p>To export data from your Discord server, you need to:</p>
+                <ol class="text-start mx-auto" style="max-width: 600px;">
+                    <li>Invite the Discord bot to your server</li>
+                    <li>Make sure the bot has the necessary permissions</li>
+                    <li>Run the <code>!export</code> command in your Discord server</li>
+                </ol>
+                <div class="alert alert-info mt-4">
+                    <p>Once data is exported, refresh this page to see the server information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

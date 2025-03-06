@@ -1,0 +1,559 @@
+{% extends "base.html" %}
+
+{% block title %}{{ server_name }} - Discord Server Info{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ server_name }}</h2>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="serverTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="channels-tab" data-bs-toggle="tab" data-bs-target="#channels" type="button" role="tab">Channels</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles" type="button" role="tab">Roles</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="members-tab" data-bs-toggle="tab" data-bs-target="#members" type="button" role="tab">Members</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="events-tab" data-bs-toggle="tab" data-bs-target="#events" type="button" role="tab">Events</button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3" id="serverTabsContent">
+                    <!-- Channels Tab -->
+                    <div class="tab-pane fade show active" id="channels" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">Channel Statistics</div>
+                                    <div class="card-body">
+                                        <canvas id="channelTypeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">Channel List</div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table" id="channelsTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Type</th>
+                                                        <th>Category</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Will be populated by JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Roles Tab -->
+                    <div class="tab-pane fade" id="roles" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">Role List</div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table" id="rolesTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Role</th>
+                                                        <th>Members</th>
+                                                        <th>Mentionable</th>
+                                                        <th>Displayed Separately</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Will be populated by JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Members Tab -->
+                    <div class="tab-pane fade" id="members" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">Member Statistics</div>
+                                    <div class="card-body">
+                                        <canvas id="memberStatusChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">Member List</div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table" id="membersTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Display Name</th>
+                                                        <th>Roles</th>
+                                                        <th>Joined</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Will be populated by JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Events Tab -->
+                    <div class="tab-pane fade" id="events" role="tabpanel">
+                        <div class="row" id="eventsContainer">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Fetch and display server data
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load channels data
+        fetch('/api/channels')
+            .then(response => response.json())
+            .then(data => {
+                displayChannels(data);
+                createChannelTypeChart(data);
+            })
+            .catch(error => console.error('Error loading channels:', error));
+        
+        // Load roles data
+        fetch('/api/roles')
+            .then(response => response.json())
+            .then(data => {
+                displayRoles(data);
+            })
+            .catch(error => console.error('Error loading roles:', error));
+        
+        // Load members data
+        fetch('/api/members')
+            .then(response => response.json())
+            .then(data => {
+                displayMembers(data);
+                createMemberStatusChart(data);
+            })
+            .catch(error => console.error('Error loading members:', error));
+        
+        // Load events data
+        fetch('/api/events')
+            .then(response => response.json())
+            .then(data => {
+                displayEvents(data);
+            })
+            .catch(error => console.error('Error loading events:', error));
+    });
+    
+    // Display channels in the table
+    function displayChannels(channels) {
+        const tbody = document.querySelector('#channelsTable tbody');
+        tbody.innerHTML = '';
+        
+        channels.sort((a, b) => a.position - b.position);
+        
+        channels.forEach(channel => {
+            const row = document.createElement('tr');
+            
+            const nameCell = document.createElement('td');
+            nameCell.textContent = channel.name;
+            
+            const typeCell = document.createElement('td');
+            typeCell.textContent = formatChannelType(channel.type);
+            
+            const categoryCell = document.createElement('td');
+            if (channel.category) {
+                categoryCell.textContent = channel.category.name;
+            } else {
+                categoryCell.textContent = '-';
+            }
+            
+            row.appendChild(nameCell);
+            row.appendChild(typeCell);
+            row.appendChild(categoryCell);
+            
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Format channel type for display
+    function formatChannelType(type) {
+        if (type.includes('text')) return 'Text';
+        if (type.includes('voice')) return 'Voice';
+        if (type.includes('category')) return 'Category';
+        if (type.includes('news')) return 'Announcement';
+        if (type.includes('stage')) return 'Stage';
+        if (type.includes('forum')) return 'Forum';
+        return type;
+    }
+    
+    // Create chart for channel types
+    function createChannelTypeChart(channels) {
+        const types = {};
+        
+        channels.forEach(channel => {
+            const type = formatChannelType(channel.type);
+            types[type] = (types[type] || 0) + 1;
+        });
+        
+        const ctx = document.getElementById('channelTypeChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(types),
+                datasets: [{
+                    data: Object.values(types),
+                    backgroundColor: [
+                        '#5865F2', // Discord Blue
+                        '#57F287', // Discord Green
+                        '#FEE75C', // Discord Yellow
+                        '#EB459E', // Discord Pink
+                        '#ED4245'  // Discord Red
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#dcddde'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Display roles in the table
+    function displayRoles(roles) {
+        const tbody = document.querySelector('#rolesTable tbody');
+        tbody.innerHTML = '';
+        
+        // Sort roles by position (highest first)
+        roles.sort((a, b) => b.position - a.position);
+        
+        // Fetch members to count role members
+        fetch('/api/members')
+            .then(response => response.json())
+            .then(members => {
+                // Count members for each role
+                const roleMemberCounts = {};
+                roles.forEach(role => {
+                    roleMemberCounts[role.id] = 0;
+                });
+                
+                members.forEach(member => {
+                    member.roles.forEach(role => {
+                        if (roleMemberCounts[role.id] !== undefined) {
+                            roleMemberCounts[role.id]++;
+                        }
+                    });
+                });
+                
+                // Display roles with member counts
+                roles.forEach(role => {
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    const roleSpan = document.createElement('span');
+                    roleSpan.className = 'discord-role';
+                    roleSpan.textContent = role.name;
+                    roleSpan.style.backgroundColor = role.color !== '#000000' ? role.color : '#36393f';
+                    roleSpan.style.border = role.color === '#000000' ? '1px solid #72767d' : 'none';
+                    nameCell.appendChild(roleSpan);
+                    
+                    const membersCell = document.createElement('td');
+                    membersCell.textContent = roleMemberCounts[role.id] || 0;
+                    
+                    const mentionableCell = document.createElement('td');
+                    mentionableCell.textContent = role.mentionable ? 'Yes' : 'No';
+                    
+                    const hoistCell = document.createElement('td');
+                    hoistCell.textContent = role.hoist ? 'Yes' : 'No';
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(membersCell);
+                    row.appendChild(mentionableCell);
+                    row.appendChild(hoistCell);
+                    
+                    tbody.appendChild(row);
+                });
+            });
+    }
+    
+    // Display members in the table
+    function displayMembers(members) {
+        const tbody = document.querySelector('#membersTable tbody');
+        tbody.innerHTML = '';
+        
+        // Sort members by join date (newest first)
+        members.sort((a, b) => {
+            if (!a.joined_at) return 1;
+            if (!b.joined_at) return -1;
+            return new Date(b.joined_at) - new Date(a.joined_at);
+        });
+        
+        // Fetch roles for display
+        fetch('/api/roles')
+            .then(response => response.json())
+            .then(roles => {
+                // Create role lookup map
+                const roleMap = {};
+                roles.forEach(role => {
+                    roleMap[role.id] = role;
+                });
+                
+                // Display members with their roles
+                members.forEach(member => {
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = member.name;
+                    if (member.bot) {
+                        const botBadge = document.createElement('span');
+                        botBadge.className = 'badge bg-primary ms-2';
+                        botBadge.textContent = 'BOT';
+                        nameCell.appendChild(botBadge);
+                    }
+                    
+                    const displayNameCell = document.createElement('td');
+                    displayNameCell.textContent = member.display_name;
+                    
+                    const rolesCell = document.createElement('td');
+                    if (member.roles && member.roles.length > 0) {
+                        // Sort roles by position
+                        member.roles.sort((a, b) => {
+                            const roleA = roleMap[a.id] || { position: 0 };
+                            const roleB = roleMap[b.id] || { position: 0 };
+                            return roleB.position - roleA.position;
+                        });
+                        
+                        // Display top 3 roles
+                        const topRoles = member.roles.slice(0, 3);
+                        topRoles.forEach(role => {
+                            const fullRole = roleMap[role.id];
+                            if (fullRole) {
+                                const roleSpan = document.createElement('span');
+                                roleSpan.className = 'discord-role';
+                                roleSpan.textContent = fullRole.name;
+                                roleSpan.style.backgroundColor = fullRole.color !== '#000000' ? fullRole.color : '#36393f';
+                                roleSpan.style.border = fullRole.color === '#000000' ? '1px solid #72767d' : 'none';
+                                rolesCell.appendChild(roleSpan);
+                            }
+                        });
+                        
+                        // Show count if there are more roles
+                        if (member.roles.length > 3) {
+                            const moreRoles = document.createElement('span');
+                            moreRoles.className = 'badge bg-secondary ms-2';
+                            moreRoles.textContent = `+${member.roles.length - 3} more`;
+                            rolesCell.appendChild(moreRoles);
+                        }
+                    } else {
+                        rolesCell.textContent = '-';
+                    }
+                    
+                    const joinedCell = document.createElement('td');
+                    if (member.joined_at) {
+                        const joinDate = new Date(member.joined_at);
+                        joinedCell.textContent = joinDate.toLocaleDateString();
+                    } else {
+                        joinedCell.textContent = 'Unknown';
+                    }
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(displayNameCell);
+                    row.appendChild(rolesCell);
+                    row.appendChild(joinedCell);
+                    
+                    tbody.appendChild(row);
+                });
+            });
+    }
+    
+    // Create chart for member statuses
+    function createMemberStatusChart(members) {
+        const statuses = {
+            'online': 0,
+            'idle': 0,
+            'dnd': 0,
+            'offline': 0,
+            'unknown': 0
+        };
+        
+        members.forEach(member => {
+            if (member.status && statuses[member.status] !== undefined) {
+                statuses[member.status]++;
+            } else {
+                statuses['unknown']++;
+            }
+        });
+        
+        const ctx = document.getElementById('memberStatusChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Online', 'Idle', 'Do Not Disturb', 'Offline', 'Unknown'],
+                datasets: [{
+                    data: [
+                        statuses.online,
+                        statuses.idle,
+                        statuses.dnd,
+                        statuses.offline,
+                        statuses.unknown
+                    ],
+                    backgroundColor: [
+                        '#57F287', // Online - Green
+                        '#FEE75C', // Idle - Yellow
+                        '#ED4245', // DND - Red
+                        '#72767d', // Offline - Grey
+                        '#36393f'  // Unknown - Dark
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#dcddde'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Display scheduled events
+    function displayEvents(events) {
+        const container = document.getElementById('eventsContainer');
+        container.innerHTML = '';
+        
+        if (!events || events.length === 0 || (events.length === 1 && events[0].error)) {
+            const noEvents = document.createElement('div');
+            noEvents.className = 'col-12 text-center';
+            noEvents.innerHTML = '<p>No scheduled events found.</p>';
+            container.appendChild(noEvents);
+            return;
+        }
+        
+        // Sort events by start time
+        events.sort((a, b) => {
+            if (!a.start_time) return 1;
+            if (!b.start_time) return -1;
+            return new Date(a.start_time) - new Date(b.start_time);
+        });
+        
+        events.forEach(event => {
+            const eventCol = document.createElement('div');
+            eventCol.className = 'col-md-6 mb-4';
+            
+            const eventCard = document.createElement('div');
+            eventCard.className = 'card h-100';
+            
+            const cardHeader = document.createElement('div');
+            cardHeader.className = 'card-header';
+            cardHeader.textContent = event.name;
+            
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+            
+            // Event description
+            if (event.description) {
+                const description = document.createElement('p');
+                description.textContent = event.description;
+                cardBody.appendChild(description);
+            }
+            
+            // Event details list
+            const detailsList = document.createElement('ul');
+            detailsList.className = 'list-group list-group-flush mb-3';
+            
+            // Start time
+            if (event.start_time) {
+                const startItem = document.createElement('li');
+                startItem.className = 'list-group-item';
+                const startDate = new Date(event.start_time);
+                startItem.innerHTML = `<strong>Starts:</strong> ${startDate.toLocaleString()}`;
+                detailsList.appendChild(startItem);
+            }
+            
+            // End time
+            if (event.end_time) {
+                const endItem = document.createElement('li');
+                endItem.className = 'list-group-item';
+                const endDate = new Date(event.end_time);
+                endItem.innerHTML = `<strong>Ends:</strong> ${endDate.toLocaleString()}`;
+                detailsList.appendChild(endItem);
+            }
+            
+            // Location
+            if (event.location) {
+                const locationItem = document.createElement('li');
+                locationItem.className = 'list-group-item';
+                locationItem.innerHTML = `<strong>Location:</strong> ${event.location}`;
+                detailsList.appendChild(locationItem);
+            }
+            
+            // Status
+            if (event.status) {
+                const statusItem = document.createElement('li');
+                statusItem.className = 'list-group-item';
+                statusItem.innerHTML = `<strong>Status:</strong> ${formatEventStatus(event.status)}`;
+                detailsList.appendChild(statusItem);
+            }
+            
+            cardBody.appendChild(detailsList);
+            
+            eventCard.appendChild(cardHeader);
+            eventCard.appendChild(cardBody);
+            eventCol.appendChild(eventCard);
+            container.appendChild(eventCol);
+        });
+    }
+    
+    // Format event status for display
+    function formatEventStatus(status) {
+        if (status.includes('scheduled')) return 'Scheduled';
+        if (status.includes('active')) return 'Active';
+        if (status.includes('completed')) return 'Completed';
+        if (status.includes('canceled')) return 'Canceled';
+        return status;
+    }
+</script>
+{% endblock %}
