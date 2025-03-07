@@ -212,6 +212,37 @@ def create_app():
             except Exception as e:
                 return jsonify({"status": "error", "message": str(e)}), 500
     
+    @app.route('/api/upload_file', methods=['POST'])
+    def api_upload_file():
+        """Upload a single file to the server_data directory"""
+        if 'file' not in request.files:
+            return jsonify({"status": "error", "message": "No file part"}), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({"status": "error", "message": "No selected file"}), 400
+        
+        if file:
+            try:
+                # Ensure the directory exists
+                os.makedirs(EXPORT_DIR, exist_ok=True)
+                
+                # Save the file to the server_data directory
+                file_path = os.path.join(EXPORT_DIR, secure_filename(file.filename))
+                file.save(file_path)
+                
+                print(f"Saved file to {file_path}")
+                
+                return jsonify({
+                    "status": "success", 
+                    "message": f"File {file.filename} uploaded successfully",
+                    "path": file_path
+                })
+            except Exception as e:
+                print(f"Error uploading file: {e}")
+                return jsonify({"status": "error", "message": str(e)}), 500
+    
     @app.route('/api/trigger_export', methods=['POST'])
     def api_trigger_export():
         """Trigger a Discord data export"""

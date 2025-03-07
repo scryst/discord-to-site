@@ -29,32 +29,19 @@ def upload_files():
     
     print(f"Found {len(json_files)} JSON files to upload")
     
-    # Create a temporary zip file of the server_data directory
-    zip_path = "server_data.zip"
-    shutil.make_archive("server_data", 'zip', SERVER_DATA_DIR)
-    
-    print(f"Created zip file at {zip_path}")
-    
-    # Upload the zip file to Render
-    try:
-        with open(zip_path, 'rb') as zip_file:
-            files = {'file': zip_file}
-            response = requests.post(f"{RENDER_API_URL}/api/upload_data", files=files)
-            
-        if response.status_code == 200:
-            print(f"Successfully uploaded data: {response.text}")
-        else:
-            print(f"Failed to upload data: {response.status_code} - {response.text}")
-    
-    except Exception as e:
-        print(f"Error uploading data: {e}")
-    
-    # Clean up the temporary zip file
-    try:
-        os.remove(zip_path)
-        print(f"Removed temporary zip file {zip_path}")
-    except Exception as e:
-        print(f"Error removing zip file: {e}")
+    # Upload each file individually
+    for file_path in json_files:
+        try:
+            with open(file_path, 'rb') as file:
+                files = {'file': (file_path.name, file, 'application/json')}
+                response = requests.post(f"{RENDER_API_URL}/api/upload_file", files=files)
+                
+                if response.status_code == 200:
+                    print(f"Successfully uploaded {file_path.name}: {response.text}")
+                else:
+                    print(f"Failed to upload {file_path.name}: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error uploading {file_path.name}: {e}")
 
 if __name__ == "__main__":
     print("Starting data upload to Render...")
