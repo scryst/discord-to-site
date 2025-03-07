@@ -1,0 +1,448 @@
+[
+    {
+        "id": 1346633634282475520,
+        "name": "sleep-schedule",
+        "type": "text",
+        "position": 27,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346632581151461517,
+        "name": "resources",
+        "type": "text",
+        "position": 21,
+        "category": {
+            "id": 1346630613477883935,
+            "name": "\ud83d\udcbb CTO Chat"
+        }
+    },
+    {
+        "id": 1346638757519949937,
+        "name": "Demo Day",
+        "type": "stage_voice",
+        "position": 0,
+        "category": {
+            "id": 1346598084771053622,
+            "name": "\u2b50 Event"
+        }
+    },
+    {
+        "id": 1346622623144214568,
+        "name": "\ud83c\udf10 Info",
+        "type": "category",
+        "position": 2
+    },
+    {
+        "id": 1346629685399785573,
+        "name": "building",
+        "type": "text",
+        "position": 8,
+        "category": {
+            "id": 1346625053609169073,
+            "name": "\u2615 Startup"
+        }
+    },
+    {
+        "id": 1346639843337306125,
+        "name": "start-coffee-chat",
+        "type": "text",
+        "position": 32,
+        "category": {
+            "id": 1346639257439047731,
+            "name": "\ud83d\udde3 Coffee Chatting"
+        }
+    },
+    {
+        "id": 1346612763711242402,
+        "name": "announcements",
+        "type": "news",
+        "position": 2,
+        "category": {
+            "id": 1346622623144214568,
+            "name": "\ud83c\udf10 Info"
+        }
+    },
+    {
+        "id": 1346625640861798480,
+        "name": "\ud83d\ude80 Venture Capital Stages",
+        "type": "category",
+        "position": 8
+    },
+    {
+        "id": 1347348408729600021,
+        "name": "matcha-bot",
+        "type": "text",
+        "position": 33,
+        "category": {
+            "id": 1346639257439047731,
+            "name": "\ud83d\udde3 Coffee Chatting"
+        }
+    },
+    {
+        "id": 1346631421942304840,
+        "name": "investors",
+        "type": "text",
+        "position": 16,
+        "category": {
+            "id": 1346625078036791346,
+            "name": "\ud83d\udcbc CEO Chat"
+        }
+    },
+    {
+        "id": 1346625053609169073,
+        "name": "\u2615 Startup",
+        "type": "category",
+        "position": 4
+    },
+    {
+        "id": 1346598084771053622,
+        "name": "\u2b50 Event",
+        "type": "category",
+        "position": 3
+    },
+    {
+        "id": 1346636846259769354,
+        "name": "about-me",
+        "type": "text",
+        "position": 6,
+        "category": {
+            "id": 1346625053609169073,
+            "name": "\u2615 Startup"
+        }
+    },
+    {
+        "id": 1346679168338890793,
+        "name": "wotd",
+        "type": "text",
+        "position": 25,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346640438081097751,
+        "name": "gaming",
+        "type": "text",
+        "position": 29,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346625078036791346,
+        "name": "\ud83d\udcbc CEO Chat",
+        "type": "category",
+        "position": 6
+    },
+    {
+        "id": 1346626036556759051,
+        "name": "seed",
+        "type": "text",
+        "position": 23,
+        "category": {
+            "id": 1346625640861798480,
+            "name": "\ud83d\ude80 Venture Capital Stages"
+        }
+    },
+    {
+        "id": 1346681744102920192,
+        "name": "\ud83d\udcb8 Investing",
+        "type": "category",
+        "position": 5
+    },
+    {
+        "id": 1346682004627918888,
+        "name": "angel-investors",
+        "type": "text",
+        "position": 14,
+        "category": {
+            "id": 1346681744102920192,
+            "name": "\ud83d\udcb8 Investing"
+        }
+    },
+    {
+        "id": 1346682132382355506,
+        "name": "partners",
+        "type": "text",
+        "position": 11,
+        "category": {
+            "id": 1346681744102920192,
+            "name": "\ud83d\udcb8 Investing"
+        }
+    },
+    {
+        "id": 1346639257439047731,
+        "name": "\ud83d\udde3 Coffee Chatting",
+        "type": "category",
+        "position": 10
+    },
+    {
+        "id": 1346630708155781234,
+        "name": "frontend",
+        "type": "text",
+        "position": 19,
+        "category": {
+            "id": 1346630613477883935,
+            "name": "\ud83d\udcbb CTO Chat"
+        }
+    },
+    {
+        "id": 1346639118339149825,
+        "name": "upcoming-events",
+        "type": "news",
+        "position": 4,
+        "category": {
+            "id": 1346598084771053622,
+            "name": "\u2b50 Event"
+        }
+    },
+    {
+        "id": 1346640455378665506,
+        "name": "memes",
+        "type": "text",
+        "position": 30,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346629646862778400,
+        "name": "coffee-chat",
+        "type": "text",
+        "position": 5,
+        "category": {
+            "id": 1346625053609169073,
+            "name": "\u2615 Startup"
+        }
+    },
+    {
+        "id": 1346682019547058206,
+        "name": "general",
+        "type": "text",
+        "position": 10,
+        "category": {
+            "id": 1346681744102920192,
+            "name": "\ud83d\udcb8 Investing"
+        }
+    },
+    {
+        "id": 1346632504878043147,
+        "name": "employees",
+        "type": "text",
+        "position": 17,
+        "category": {
+            "id": 1346625078036791346,
+            "name": "\ud83d\udcbc CEO Chat"
+        }
+    },
+    {
+        "id": 1346610272638599232,
+        "name": "rules",
+        "type": "text",
+        "position": 1,
+        "category": {
+            "id": 1346622623144214568,
+            "name": "\ud83c\udf10 Info"
+        }
+    },
+    {
+        "id": 1346633747621085238,
+        "name": "job-recruiting",
+        "type": "text",
+        "position": 26,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346629629783445594,
+        "name": "idea",
+        "type": "text",
+        "position": 7,
+        "category": {
+            "id": 1346625053609169073,
+            "name": "\u2615 Startup"
+        }
+    },
+    {
+        "id": 1346625710051164211,
+        "name": "pre-seed",
+        "type": "text",
+        "position": 22,
+        "category": {
+            "id": 1346625640861798480,
+            "name": "\ud83d\ude80 Venture Capital Stages"
+        }
+    },
+    {
+        "id": 1346629741137887273,
+        "name": "snowballing",
+        "type": "text",
+        "position": 9,
+        "category": {
+            "id": 1346625053609169073,
+            "name": "\u2615 Startup"
+        }
+    },
+    {
+        "id": 1347348809654730853,
+        "name": "coffee-bot",
+        "type": "text",
+        "position": 34,
+        "category": {
+            "id": 1346639257439047731,
+            "name": "\ud83d\udde3 Coffee Chatting"
+        }
+    },
+    {
+        "id": 1346681945005883442,
+        "name": "venture-capital",
+        "type": "text",
+        "position": 12,
+        "category": {
+            "id": 1346681744102920192,
+            "name": "\ud83d\udcb8 Investing"
+        }
+    },
+    {
+        "id": 1346633661558161482,
+        "name": "exercise-and-nutrition",
+        "type": "text",
+        "position": 28,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346632113436491939,
+        "name": "customers",
+        "type": "text",
+        "position": 15,
+        "category": {
+            "id": 1346625078036791346,
+            "name": "\ud83d\udcbc CEO Chat"
+        }
+    },
+    {
+        "id": 1346630718909972612,
+        "name": "backend",
+        "type": "text",
+        "position": 20,
+        "category": {
+            "id": 1346630613477883935,
+            "name": "\ud83d\udcbb CTO Chat"
+        }
+    },
+    {
+        "id": 1346639333746151495,
+        "name": "Speaker Panel",
+        "type": "stage_voice",
+        "position": 1,
+        "category": {
+            "id": 1346598084771053622,
+            "name": "\u2b50 Event"
+        }
+    },
+    {
+        "id": 1346630613477883935,
+        "name": "\ud83d\udcbb CTO Chat",
+        "type": "category",
+        "position": 7
+    },
+    {
+        "id": 1346648611483811991,
+        "name": "\ud83d\udccc  .gg / Coffee",
+        "type": "category",
+        "position": 0
+    },
+    {
+        "id": 1346626682706067546,
+        "name": "series",
+        "type": "text",
+        "position": 24,
+        "category": {
+            "id": 1346625640861798480,
+            "name": "\ud83d\ude80 Venture Capital Stages"
+        }
+    },
+    {
+        "id": 1346681989696192523,
+        "name": "private-equity",
+        "type": "text",
+        "position": 13,
+        "category": {
+            "id": 1346681744102920192,
+            "name": "\ud83d\udcb8 Investing"
+        }
+    },
+    {
+        "id": 1346633814088220754,
+        "name": "advice",
+        "type": "text",
+        "position": 31,
+        "category": {
+            "id": 1346633577919545405,
+            "name": "\ud83d\udcc0 Misc"
+        }
+    },
+    {
+        "id": 1346715289168908349,
+        "name": "Yapping",
+        "type": "voice",
+        "position": 2,
+        "category": {
+            "id": 1346639257439047731,
+            "name": "\ud83d\udde3 Coffee Chatting"
+        }
+    },
+    {
+        "id": 1346630376826867794,
+        "name": "resources",
+        "type": "text",
+        "position": 18,
+        "category": {
+            "id": 1346625078036791346,
+            "name": "\ud83d\udcbc CEO Chat"
+        }
+    },
+    {
+        "id": 1346633577919545405,
+        "name": "\ud83d\udcc0 Misc",
+        "type": "category",
+        "position": 9
+    },
+    {
+        "id": 1346610272638599235,
+        "name": "moderator-only",
+        "type": "text",
+        "position": 0,
+        "category": {
+            "id": 1346622623144214568,
+            "name": "\ud83c\udf10 Info"
+        }
+    },
+    {
+        "id": 1346649069375721513,
+        "name": "\ud83d\udccc  www.coffeechat.com",
+        "type": "category",
+        "position": 1
+    },
+    {
+        "id": 1346612883110498365,
+        "name": "forum-discussion",
+        "type": "forum",
+        "position": 3,
+        "category": {
+            "id": 1346622623144214568,
+            "name": "\ud83c\udf10 Info"
+        }
+    }
+]

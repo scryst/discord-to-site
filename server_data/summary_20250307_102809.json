@@ -1,0 +1,10 @@
+{
+  "server_name": "Coffee Chat Ventures",
+  "export_time": "2025-03-07 11:56:40",
+  "files": {
+    "channels": "server_data/channels_20250307_102809.json",
+    "roles": "server_data/roles_20250307_102809.json",
+    "members": "server_data/members_20250307_102809.json",
+    "events": "server_data/events_20250307_102809.json"
+  }
+}

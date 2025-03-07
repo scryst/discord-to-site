@@ -1,7 +1,6 @@
 # Environment variables
 .env
 .env.local
-.env.vercel
 
 # Python
 __pycache__/
@@ -26,8 +25,12 @@ var/
 *.egg
 
 # Exported data
+# We want to keep sample data in server_data/
+# server_data/
 exports/
-server_data/
+
+# Backup files
+backup/
 
 # Node.js
 node_modules/

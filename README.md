@@ -1,21 +1,23 @@
 # Discord Server to Website Exporter
 
-This project allows you to export information from a Discord server (channels, roles, members, events) and display it on a web interface, with support for deployment to Vercel.
+This project allows you to export information from a Discord server (channels, roles, members, events) and display it on a web interface, with support for deployment to Render.
 
 ## Features
 
 - Export Discord server data to JSON files
 - Display server information on a web interface
-- Real-time data visualization with charts
-- Responsive design that works on all devices
-- API endpoints for integration with Vercel or other frontends
+- API endpoints for accessing Discord server data
+- Automated export functionality via API
 - CORS support for cross-origin requests
+- Robust error handling and logging
+- Deployment support for Render
 
 ## Requirements
 
 - Python 3.8 or higher
 - Discord Bot Token (with proper permissions)
 - Discord server with administrator access
+- Render account (for deployment)
 
 ## Setup Instructions
 
@@ -52,12 +54,12 @@ This project allows you to export information from a Discord server (channels, r
    ```
    pip install -r requirements.txt
    ```
-3. Edit the `.env` file and add your Discord bot token:
+3. Create a `.env` file and add your Discord bot token:
    ```
    DISCORD_TOKEN=your_discord_token_here
    ```
 
-### 4. Run the Application
+### 4. Run the Application Locally
 
 1. Start the bot and web server:
    ```
@@ -66,6 +68,17 @@ This project allows you to export information from a Discord server (channels, r
 2. The web server will start on http://localhost:5000
 3. The Discord bot will connect to Discord
 
+### 5. Deploy to Render
+
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Set the following:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `python main.py`
+4. Add the environment variable:
+   - `DISCORD_TOKEN=your_discord_token_here`
+5. Deploy the service
+
 ## Usage
 
 ### Discord Commands
@@ -73,16 +86,7 @@ This project allows you to export information from a Discord server (channels, r
 - `!server_info` - Display basic server information
 - `!export` - Export comprehensive server data (admin only)
 
-### Web Interface
-
-The web interface displays the exported server data with the following sections:
-
-- **Channels** - List of all channels with type and category
-- **Roles** - List of all roles with member counts and properties
-- **Members** - List of all members with roles and join dates
-- **Events** - List of all scheduled events
-
-## API Endpoints
+### API Endpoints
 
 The following API endpoints are available for integration with external applications:
 
@@ -93,17 +97,9 @@ The following API endpoints are available for integration with external applicat
 - `/api/events` - Get the latest events data
 - `/api/all` - Get all data in a single response
 - `/api/health` - Health check endpoint
-
-## Vercel Deployment
-
-A Next.js frontend example is included in the `vercel-example` directory, ready to be deployed to Vercel:
-
-1. Push the code to GitHub
-2. Connect your GitHub repository to Vercel
-3. Set the environment variable `NEXT_PUBLIC_API_URL` to your API URL
-4. Deploy!
-
-For detailed deployment instructions, see the [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) file.
+- `/api/trigger_export` - Trigger a new export (POST request)
+- `/api/create_directory` - Create the server_data directory if it doesn't exist
+- `/api/upload_file` - Upload a file to the server_data directory
 
 ## Project Structure
 
@@ -113,26 +109,59 @@ For detailed deployment instructions, see the [DEPLOYMENT_GUIDE.md](DEPLOYMENT_G
   - `commands.py` - Discord bot commands
   - `exporters.py` - Functions to export server data
   - `web_app.py` - Flask web application
-- `templates/` - HTML templates for the web interface
-- `static/` - Static files (CSS, JS, images)
 - `server_data/` - Exported server data (JSON files)
-- `vercel-example/` - Next.js frontend for Vercel deployment
+- `debug_export.py` - Script to debug export functionality
+- `fix_render_export.py` - Script to fix export issues on Render
+- `fix_render_paths.py` - Script to fix file paths on Render
 
-## Customization
+## Utility Scripts
 
-You can customize the following aspects of the application:
+### debug_export.py
 
-- **Bot Command Prefix**: Edit the `COMMAND_PREFIX` variable in `src/config.py`
-- **Web Interface**: Edit the HTML templates in the `templates/` directory
-- **Export Format**: Modify the exporter functions in `src/exporters.py`
-- **Vercel Frontend**: Customize the Next.js application in the `vercel-example/` directory
+This script helps diagnose issues with the export functionality:
+- Checks API health
+- Triggers an export
+- Verifies if data is available
+
+### fix_render_export.py
+
+This script helps fix export issues on Render:
+- Creates export files manually using local data
+- Uploads files to Render
+- Checks if data is available through the API
+
+### fix_render_paths.py
+
+This script fixes file path issues on Render:
+- Creates export files with Linux-style paths
+- Uploads files to Render
+- Checks if data is available through the API
 
 ## Troubleshooting
 
-- **Bot doesn't connect**: Make sure your token is correct in the `.env` file
+### Common Issues
+
+- **Bot doesn't connect**: Make sure your token is correct in the environment variables
 - **Missing permissions**: Ensure the bot has the necessary permissions in your server
-- **Web server issues**: Check if port 5000 is already in use on your system
-- **CORS errors**: Check the CORS configuration in `src/web_app.py`
+- **No export data found**: Check if the server_data directory exists and has proper permissions
+- **File path issues**: Make sure file paths use forward slashes (/) on Render
+
+### Debugging Steps
+
+1. Check API health:
+   ```
+   python debug_export.py
+   ```
+
+2. Fix export issues:
+   ```
+   python fix_render_export.py
+   ```
+
+3. Fix file path issues:
+   ```
+   python fix_render_paths.py
+   ```
 
 ## License
 

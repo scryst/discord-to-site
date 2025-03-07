@@ -1,0 +1,140 @@
+[
+    {
+        "id": 1347343694646214688,
+        "name": "Matcha",
+        "display_name": "Matcha",
+        "joined_at": "2025-03-06T23:31:21.717320+00:00",
+        "bot": true,
+        "roles": [
+            {
+                "id": 1347350877043953717,
+                "name": "Matcha"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 303834316922683393,
+        "name": "oncex_1x",
+        "display_name": "Pavat",
+        "joined_at": "2025-03-04T21:50:41.462000+00:00",
+        "bot": false,
+        "roles": [
+            {
+                "id": 1346600264198651944,
+                "name": "Partner"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 395069547935170562,
+        "name": "lak5",
+        "display_name": "laks",
+        "joined_at": "2025-03-04T21:43:58.151000+00:00",
+        "bot": false,
+        "roles": [
+            {
+                "id": 1346641835828711516,
+                "name": "Founder"
+            },
+            {
+                "id": 1346641833882812427,
+                "name": "Bachelors (B.A)"
+            },
+            {
+                "id": 1346600264198651944,
+                "name": "Partner"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 451609084613885952,
+        "name": "laksmanah",
+        "display_name": "George",
+        "joined_at": "2025-03-05T10:09:39.334000+00:00",
+        "bot": false,
+        "roles": [
+            {
+                "id": 1346641835828711516,
+                "name": "Founder"
+            },
+            {
+                "id": 1346641833882812427,
+                "name": "Bachelors (B.A)"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 456633518882160642,
+        "name": "YouTube",
+        "display_name": "YouTube",
+        "joined_at": "2025-03-05T04:49:28.126430+00:00",
+        "bot": true,
+        "roles": [
+            {
+                "id": 1346706155459838007,
+                "name": "YouTube"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 713026372142104687,
+        "name": "TweetShift",
+        "display_name": "TweetShift",
+        "joined_at": "2025-03-05T04:51:58.123313+00:00",
+        "bot": true,
+        "roles": [
+            {
+                "id": 1346706784659832945,
+                "name": "TweetShift"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 818225333831598112,
+        "name": "yaohan1688",
+        "display_name": "yao",
+        "joined_at": "2025-03-04T21:40:02.005000+00:00",
+        "bot": false,
+        "roles": [
+            {
+                "id": 1346600264198651944,
+                "name": "Partner"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 949479338275913799,
+        "name": "Make it a Quote",
+        "display_name": "Make it a Quote",
+        "joined_at": "2025-03-05T04:45:59.654227+00:00",
+        "bot": true,
+        "roles": [
+            {
+                "id": 1346705280884281417,
+                "name": "Make it a Quote"
+            }
+        ],
+        "status": "offline"
+    },
+    {
+        "id": 1346747859189633074,
+        "name": "Coffee",
+        "display_name": "Coffee",
+        "joined_at": "2025-03-05T08:44:39.113773+00:00",
+        "bot": true,
+        "roles": [
+            {
+                "id": 1346765341145043018,
+                "name": "Coffee"
+            }
+        ],
+        "status": "offline"
+    }
+]

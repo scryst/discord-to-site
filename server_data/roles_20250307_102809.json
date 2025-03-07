@@ -1,0 +1,497 @@
+[
+    {
+        "id": 1347350877043953717,
+        "name": "Matcha",
+        "color": "#000000",
+        "position": 1,
+        "permissions": "<Permissions value=2147601408>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346765341145043018,
+        "name": "Coffee",
+        "color": "#000000",
+        "position": 1,
+        "permissions": "<Permissions value=2147601408>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346706784659832945,
+        "name": "TweetShift",
+        "color": "#000000",
+        "position": 1,
+        "permissions": "<Permissions value=537160768>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346706155459838007,
+        "name": "YouTube",
+        "color": "#000000",
+        "position": 1,
+        "permissions": "<Permissions value=537127937>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346705280884281417,
+        "name": "Make it a Quote",
+        "color": "#000000",
+        "position": 1,
+        "permissions": "<Permissions value=274878024704>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641835828711516,
+        "name": "Founder",
+        "color": "#000000",
+        "position": 1,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": true
+    },
+    {
+        "id": 1346641835224993902,
+        "name": "Investor",
+        "color": "#000000",
+        "position": 2,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641834797174884,
+        "name": "STEM",
+        "color": "#000000",
+        "position": 3,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641834478407781,
+        "name": "Humanities",
+        "color": "#000000",
+        "position": 4,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641833882812427,
+        "name": "Bachelors (B.A)",
+        "color": "#000000",
+        "position": 5,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641833328906240,
+        "name": "Masters (M.A)",
+        "color": "#000000",
+        "position": 6,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641833077243914,
+        "name": "Doctorate (Ph.D)",
+        "color": "#000000",
+        "position": 7,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641832557416480,
+        "name": "new role",
+        "color": "#000000",
+        "position": 8,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641832037191720,
+        "name": "Engineering",
+        "color": "#000000",
+        "position": 9,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641831575945298,
+        "name": "Theatre",
+        "color": "#000000",
+        "position": 10,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641831328223324,
+        "name": "Fine Arts",
+        "color": "#000000",
+        "position": 11,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641830665523220,
+        "name": "Sociology",
+        "color": "#000000",
+        "position": 12,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641830216732682,
+        "name": "Physics",
+        "color": "#000000",
+        "position": 13,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641829793370214,
+        "name": "Public Health",
+        "color": "#000000",
+        "position": 14,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641829256368199,
+        "name": "Environmental Science",
+        "color": "#000000",
+        "position": 15,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641542357585940,
+        "name": "Comparative Literature",
+        "color": "#000000",
+        "position": 16,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641541871177760,
+        "name": "Cognitive Science",
+        "color": "#000000",
+        "position": 17,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641541338501201,
+        "name": "Psychology",
+        "color": "#000000",
+        "position": 18,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641540914610229,
+        "name": "Anthropology",
+        "color": "#000000",
+        "position": 19,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641540587458621,
+        "name": "Architecture",
+        "color": "#000000",
+        "position": 20,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641540235132969,
+        "name": "Statistics",
+        "color": "#000000",
+        "position": 21,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641490683891722,
+        "name": "Political Science",
+        "color": "#000000",
+        "position": 22,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641490155274250,
+        "name": "Philosophy",
+        "color": "#000000",
+        "position": 23,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641275126026300,
+        "name": "Symbolic Systems",
+        "color": "#000000",
+        "position": 24,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641274886819850,
+        "name": "History",
+        "color": "#000000",
+        "position": 25,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641274710523966,
+        "name": "English",
+        "color": "#000000",
+        "position": 26,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641197992771654,
+        "name": "Applied Mathematics",
+        "color": "#000000",
+        "position": 27,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346641197619482655,
+        "name": "Pure Mathematics",
+        "color": "#000000",
+        "position": 28,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346640956455260273,
+        "name": "Human Biology",
+        "color": "#000000",
+        "position": 29,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346640955897548841,
+        "name": "EECS",
+        "color": "#000000",
+        "position": 30,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346640955457146890,
+        "name": "Economics",
+        "color": "#000000",
+        "position": 31,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346640955108888616,
+        "name": "Business",
+        "color": "#000000",
+        "position": 32,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346640954525745194,
+        "name": "Electrical Engineering",
+        "color": "#000000",
+        "position": 33,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346640954001719306,
+        "name": "Data Science",
+        "color": "#000000",
+        "position": 34,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346636103020712049,
+        "name": "Computer Science",
+        "color": "#000000",
+        "position": 35,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635761130410165,
+        "name": "CEO",
+        "color": "#000000",
+        "position": 36,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635761503571968,
+        "name": "CTO",
+        "color": "#000000",
+        "position": 37,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635762002821211,
+        "name": "Sponsor",
+        "color": "#000000",
+        "position": 38,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346636103477755974,
+        "name": "Angel Investor",
+        "color": "#000000",
+        "position": 39,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635724778242059,
+        "name": "Venture Capital",
+        "color": "#000000",
+        "position": 40,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346636102496423978,
+        "name": "new role",
+        "color": "#000000",
+        "position": 41,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346636102458675281,
+        "name": "new role",
+        "color": "#000000",
+        "position": 42,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346636101648912485,
+        "name": "new role",
+        "color": "#000000",
+        "position": 43,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635760593404077,
+        "name": "The House Fund Partner",
+        "color": "#ffd83c",
+        "position": 44,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635759863464011,
+        "name": "Pear Partner",
+        "color": "#1f8b4c",
+        "position": 45,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635283952828526,
+        "name": "A16Z Partner",
+        "color": "#9b59b6",
+        "position": 46,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635131229835264,
+        "name": "Sequoia Partner",
+        "color": "#2ecc71",
+        "position": 47,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346634977118523412,
+        "name": "Y-Combinator Partner",
+        "color": "#ec7a0e",
+        "position": 48,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346635637117292544,
+        "name": "Deal Flow Fellow",
+        "color": "#206694",
+        "position": 49,
+        "permissions": "<Permissions value=0>",
+        "mentionable": false,
+        "hoist": false
+    },
+    {
+        "id": 1346600264198651944,
+        "name": "Partner",
+        "color": "#3498db",
+        "position": 50,
+        "permissions": "<Permissions value=8>",
+        "mentionable": false,
+        "hoist": true
+    }
+]
