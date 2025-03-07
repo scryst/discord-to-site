@@ -7,6 +7,8 @@ from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
 from src.config import EXPORT_DIR
 from werkzeug.utils import secure_filename
+from datetime import datetime
+from collections import Counter
 
 # Create export directory if it doesn't exist
 os.makedirs(EXPORT_DIR, exist_ok=True)
@@ -45,11 +47,56 @@ def create_app():
     def get_latest_export():
         """Get the latest export summary file"""
         if not os.path.exists(EXPORT_DIR):
+            print(f"Export directory does not exist: {EXPORT_DIR}")
             return None
             
         summary_files = [f for f in os.listdir(EXPORT_DIR) if f.startswith('summary_') and f.endswith('.json')]
         
         if not summary_files:
+            print(f"No summary files found in {EXPORT_DIR}")
+            # Try to find any JSON files and create a summary
+            json_files = [f for f in os.listdir(EXPORT_DIR) if f.endswith('.json')]
+            if json_files:
+                print(f"Found {len(json_files)} JSON files in {EXPORT_DIR}")
+                # Extract timestamp from filenames (assuming format like 'channels_20250307_102809.json')
+                timestamps = []
+                for filename in json_files:
+                    parts = filename.split('_')
+                    if len(parts) >= 3:
+                        try:
+                            timestamp = f"{parts[1]}_{parts[2].split('.')[0]}"
+                            timestamps.append(timestamp)
+                        except:
+                            pass
+                
+                if timestamps:
+                    from collections import Counter
+                    most_common_timestamp = Counter(timestamps).most_common(1)[0][0]
+                    print(f"Using timestamp: {most_common_timestamp}")
+                    
+                    # Create a summary file
+                    summary = {
+                        "server_name": "Coffee Chat Ventures",
+                        "export_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "files": {
+                            "channels": os.path.join(EXPORT_DIR, f"channels_{most_common_timestamp}.json"),
+                            "roles": os.path.join(EXPORT_DIR, f"roles_{most_common_timestamp}.json"),
+                            "members": os.path.join(EXPORT_DIR, f"members_{most_common_timestamp}.json"),
+                            "events": os.path.join(EXPORT_DIR, f"events_{most_common_timestamp}.json")
+                        }
+                    }
+                    
+                    # Save the summary file
+                    summary_filename = f"summary_{most_common_timestamp}.json"
+                    summary_path = os.path.join(EXPORT_DIR, summary_filename)
+                    with open(summary_path, 'w', encoding='utf-8') as f:
+                        json.dump(summary, f, indent=2)
+                    
+                    print(f"Created summary file: {summary_path}")
+                    
+                    # Return the newly created summary
+                    return summary
+            
             return None
         
         # Sort by timestamp (which is part of the filename)
