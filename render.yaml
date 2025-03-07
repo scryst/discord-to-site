@@ -1,0 +1,13 @@
+services:
+  # Discord Bot + API Service
+  - type: web
+    name: discord-to-site
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: PORT
+        value: 5000
+    healthCheckPath: /api/health

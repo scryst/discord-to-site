@@ -1,16 +1,18 @@
 # Discord Server to Website Exporter
 
-This project allows you to export information from a Discord server (channels, roles, members, events) and display it on a web interface, with support for deployment to Render.
+This project allows you to export information from a Discord server (channels, roles, members, events) and display it on a web interface, with support for deployment to Render and integration with Vercel sites.
 
 ## Features
 
 - Export Discord server data to JSON files
 - Display server information on a web interface
+- Real-time data about online members and active channels
 - API endpoints for accessing Discord server data
 - Automated export functionality via API
 - CORS support for cross-origin requests
 - Robust error handling and logging
 - Deployment support for Render
+- Integration with Vercel sites (including v0.dev)
 
 ## Requirements
 
@@ -77,7 +79,16 @@ This project allows you to export information from a Discord server (channels, r
    - Start Command: `python main.py`
 4. Add the environment variable:
    - `DISCORD_TOKEN=your_discord_token_here`
-5. Deploy the service
+5. Set the Health Check Path to: `/api/health`
+6. Deploy the service
+
+### 6. Integrate with Vercel
+
+1. In your Vercel project, add an environment variable:
+   - `NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com`
+2. Use the provided React component in the `vercel-integration` directory
+3. The component will automatically fetch and display Discord data
+4. For v0.dev sites, you can use the fetch code in your page.tsx/jsx files
 
 ## Usage
 
@@ -96,6 +107,7 @@ The following API endpoints are available for integration with external applicat
 - `/api/members` - Get the latest members data
 - `/api/events` - Get the latest events data
 - `/api/all` - Get all data in a single response
+- `/api/realtime` - Get real-time data about online members and active channels
 - `/api/health` - Health check endpoint
 - `/api/trigger_export` - Trigger a new export (POST request)
 - `/api/create_directory` - Create the server_data directory if it doesn't exist
@@ -110,6 +122,7 @@ The following API endpoints are available for integration with external applicat
   - `exporters.py` - Functions to export server data
   - `web_app.py` - Flask web application
 - `server_data/` - Exported server data (JSON files)
+- `vercel-integration/` - Components and examples for Vercel integration
 - `debug_export.py` - Script to debug export functionality
 - `fix_render_export.py` - Script to fix export issues on Render
 - `fix_render_paths.py` - Script to fix file paths on Render
@@ -145,20 +158,30 @@ This script fixes file path issues on Render:
 - **Missing permissions**: Ensure the bot has the necessary permissions in your server
 - **No export data found**: Check if the server_data directory exists and has proper permissions
 - **File path issues**: Make sure file paths use forward slashes (/) on Render
+- **CORS errors**: The API is configured to allow all origins, but if you're still having issues, check browser console for specific errors
+- **"Failed to fetch" in Vercel**: Ensure your Render service is running and the NEXT_PUBLIC_API_URL is correct
 
 ### Debugging Steps
 
 1. Check API health:
    ```
-   python debug_export.py
+   curl https://your-render-service.onrender.com/api/health
    ```
 
-2. Fix export issues:
+2. Test CORS configuration:
+   ```
+   curl -H "Origin: https://your-vercel-site.vercel.app" \
+        -H "Access-Control-Request-Method: GET" \
+        -H "Access-Control-Request-Headers: X-Requested-With" \
+        -X OPTIONS https://your-render-service.onrender.com/api/all
+   ```
+
+3. Fix export issues:
    ```
    python fix_render_export.py
    ```
 
-3. Fix file path issues:
+4. Fix file path issues:
    ```
    python fix_render_paths.py
    ```

@@ -23,8 +23,8 @@ def create_app():
                 template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'),
                 static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static'))
 
-    # Enable CORS for all routes, but restrict to specific domains in production
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://coffeechatventures.com"]}})
+    # Enable CORS for all routes and all origins
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=False)
     
     # Start the Discord bot in a separate thread
     def start_discord_bot():
@@ -186,13 +186,25 @@ def create_app():
         events_data = load_data_file(summary['files']['events'])
         return jsonify(events_data)
 
-    @app.route('/api/all')
+    @app.route('/api/all', methods=['GET', 'OPTIONS'])
     def api_all():
         """Return all data in a single response"""
+        # Handle OPTIONS request for CORS preflight
+        if request.method == 'OPTIONS':
+            response = jsonify({})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Methods', 'GET')
+            return response
+            
         summary = get_latest_export()
         
         if not summary:
-            return jsonify({"error": "No export data found", "status": "waiting_for_data"})
+            error_response = jsonify({"error": "No export data found", "status": "waiting_for_data"})
+            error_response.headers.add('Access-Control-Allow-Origin', '*')
+            error_response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            error_response.headers.add('Access-Control-Allow-Methods', 'GET')
+            return error_response
         
         try:
             result = {
@@ -203,10 +215,18 @@ def create_app():
                 "events": load_data_file(summary['files']['events']) if 'files' in summary and 'events' in summary['files'] else []
             }
             
-            return jsonify(result)
+            response = jsonify(result)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Methods', 'GET')
+            return response
         except Exception as e:
             print(f"Error in api_all: {e}")
-            return jsonify({"error": str(e), "status": "error"})
+            error_response = jsonify({"error": str(e), "status": "error"})
+            error_response.headers.add('Access-Control-Allow-Origin', '*')
+            error_response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            error_response.headers.add('Access-Control-Allow-Methods', 'GET')
+            return error_response
 
     @app.route('/api/health')
     def api_health():
@@ -218,7 +238,98 @@ def create_app():
             "export_dir_exists": os.path.exists(EXPORT_DIR),
             "export_files": os.listdir(EXPORT_DIR) if os.path.exists(EXPORT_DIR) else []
         })
-    
+
+    @app.route('/api/realtime')
+    def api_realtime():
+        """Return real-time data about online members and active channels"""
+        global bot_instance
+        
+        if not bot_instance or not bot_instance.guilds:
+            return jsonify({"error": "Bot not connected", "status": "offline"})
+            
+        guild = bot_instance.guilds[0]
+        
+        try:
+            # Get online members
+            online_members = []
+            for member in guild.members:
+                if hasattr(member, 'status') and str(member.status) != 'offline':
+                    online_members.append({
+                        'id': member.id,
+                        'name': member.name,
+                        'display_name': member.display_name,
+                        'avatar_url': str(member.display_avatar.url) if hasattr(member, 'display_avatar') else None,
+                        'status': str(member.status) if hasattr(member, 'status') else 'unknown'
+                    })
+            
+            # Get active channels (channels with recent messages)
+            active_channels = []
+            for channel in guild.text_channels:
+                try:
+                    # Try to get the last message timestamp
+                    last_message = None
+                    async def get_last_message():
+                        nonlocal last_message
+                        messages = [msg async for msg in channel.history(limit=1)]
+                        if messages:
+                            last_message = messages[0]
+                    
+                    # Create a new event loop for the async call
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    loop.run_until_complete(get_last_message())
+                    loop.close()
+                    
+                    if last_message:
+                        active_channels.append({
+                            'id': channel.id,
+                            'name': channel.name,
+                            'last_message_time': last_message.created_at.isoformat(),
+                            'category': channel.category.name if channel.category else None
+                        })
+                except Exception as e:
+                    print(f"Error getting last message for channel {channel.name}: {e}")
+            
+            # Sort active channels by last message time (most recent first)
+            active_channels.sort(key=lambda x: x.get('last_message_time', ''), reverse=True)
+            
+            # Get voice channels with members
+            active_voice_channels = []
+            for channel in guild.voice_channels:
+                if len(channel.members) > 0:
+                    active_voice_channels.append({
+                        'id': channel.id,
+                        'name': channel.name,
+                        'member_count': len(channel.members),
+                        'members': [{'id': m.id, 'name': m.display_name} for m in channel.members]
+                    })
+            
+            return jsonify({
+                'timestamp': datetime.now().isoformat(),
+                'guild_name': guild.name,
+                'guild_id': guild.id,
+                'total_members': guild.member_count,
+                'online_members': online_members,
+                'active_text_channels': active_channels,
+                'active_voice_channels': active_voice_channels
+            })
+            
+        except Exception as e:
+            print(f"Error getting real-time data: {e}")
+            return jsonify({"error": str(e), "status": "error"})
+
+    @app.route('/api/cors', methods=['GET', 'OPTIONS'])
+    def handle_cors():
+        """Handle CORS preflight requests"""
+        if request.method == 'OPTIONS':
+            response = jsonify({})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+            return response
+        
+        return jsonify({"cors": "enabled"})
+
     @app.route('/api/create_directory', methods=['POST'])
     def api_create_directory():
         """Create the server_data directory if it doesn't exist"""
