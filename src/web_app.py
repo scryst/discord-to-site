@@ -32,9 +32,11 @@ def create_app():
         if not bot_started:
             bot_started = True
             try:
-                from main import run_bot, bot
-                bot_instance = bot
-                bot_thread = threading.Thread(target=run_bot)
+                # Import here to avoid circular imports
+                import importlib
+                main_module = importlib.import_module('main')
+                bot_instance = main_module.bot
+                bot_thread = threading.Thread(target=main_module.run_bot)
                 bot_thread.daemon = True
                 bot_thread.start()
                 print("Discord bot started in a separate thread")
@@ -70,7 +72,6 @@ def create_app():
                             pass
                 
                 if timestamps:
-                    from collections import Counter
                     most_common_timestamp = Counter(timestamps).most_common(1)[0][0]
                     print(f"Using timestamp: {most_common_timestamp}")
                     
@@ -324,6 +325,7 @@ def create_app():
 # Global app instance for running directly
 app = create_app()
 
+# Function to run the Flask web application
 def run_web_app(host='0.0.0.0', port=5000, debug=False):
     """Run the Flask web application"""
     app.run(host=host, port=port, debug=debug)

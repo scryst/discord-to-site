@@ -4,7 +4,6 @@ import discord
 from discord.ext import commands
 import threading
 from src.config import DISCORD_TOKEN, COMMAND_PREFIX
-from src.web_app import run_web_app
 
 # Set up intents (permissions)
 intents = discord.Intents.default()
@@ -73,6 +72,8 @@ def run_bot():
 def run_website(host='0.0.0.0', port=5000, debug=False):
     """Run the Flask website"""
     try:
+        # Import here to avoid circular imports
+        from src.web_app import run_web_app
         run_web_app(host=host, port=port, debug=debug)
     except Exception as e:
         print(f"Error running website: {e}")
