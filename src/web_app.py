@@ -4,6 +4,9 @@ from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from src.config import EXPORT_DIR
 
+# Create export directory if it doesn't exist
+os.makedirs(EXPORT_DIR, exist_ok=True)
+
 app = Flask(__name__, 
             template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'),
             static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static'))
@@ -13,6 +16,9 @@ CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://c
 
 def get_latest_export():
     """Get the latest export summary file"""
+    if not os.path.exists(EXPORT_DIR):
+        return None
+        
     summary_files = [f for f in os.listdir(EXPORT_DIR) if f.startswith('summary_') and f.endswith('.json')]
     
     if not summary_files:
@@ -27,6 +33,9 @@ def get_latest_export():
 def load_data_file(filepath):
     """Load data from a JSON file"""
     try:
+        if not os.path.exists(filepath):
+            return {"error": f"File not found: {filepath}"}
+            
         with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
@@ -49,7 +58,7 @@ def api_summary():
     summary = get_latest_export()
     
     if not summary:
-        return jsonify({"error": "No export data found"})
+        return jsonify({"error": "No export data found", "status": "waiting_for_data"})
     
     return jsonify(summary)
 
@@ -59,7 +68,7 @@ def api_channels():
     summary = get_latest_export()
     
     if not summary or 'files' not in summary or 'channels' not in summary['files']:
-        return jsonify({"error": "No channels data found"})
+        return jsonify({"error": "No channels data found", "status": "waiting_for_data"})
     
     channels_data = load_data_file(summary['files']['channels'])
     return jsonify(channels_data)
@@ -70,7 +79,7 @@ def api_roles():
     summary = get_latest_export()
     
     if not summary or 'files' not in summary or 'roles' not in summary['files']:
-        return jsonify({"error": "No roles data found"})
+        return jsonify({"error": "No roles data found", "status": "waiting_for_data"})
     
     roles_data = load_data_file(summary['files']['roles'])
     return jsonify(roles_data)
@@ -81,7 +90,7 @@ def api_members():
     summary = get_latest_export()
     
     if not summary or 'files' not in summary or 'members' not in summary['files']:
-        return jsonify({"error": "No members data found"})
+        return jsonify({"error": "No members data found", "status": "waiting_for_data"})
     
     members_data = load_data_file(summary['files']['members'])
     return jsonify(members_data)
@@ -92,7 +101,7 @@ def api_events():
     summary = get_latest_export()
     
     if not summary or 'files' not in summary or 'events' not in summary['files']:
-        return jsonify({"error": "No events data found"})
+        return jsonify({"error": "No events data found", "status": "waiting_for_data"})
     
     events_data = load_data_file(summary['files']['events'])
     return jsonify(events_data)
@@ -103,14 +112,14 @@ def api_all():
     summary = get_latest_export()
     
     if not summary:
-        return jsonify({"error": "No export data found"})
+        return jsonify({"error": "No export data found", "status": "waiting_for_data"})
     
     result = {
         "summary": summary,
-        "channels": load_data_file(summary['files']['channels']) if 'channels' in summary['files'] else [],
-        "roles": load_data_file(summary['files']['roles']) if 'roles' in summary['files'] else [],
-        "members": load_data_file(summary['files']['members']) if 'members' in summary['files'] else [],
-        "events": load_data_file(summary['files']['events']) if 'events' in summary['files'] else []
+        "channels": load_data_file(summary['files']['channels']) if 'files' in summary and 'channels' in summary['files'] else [],
+        "roles": load_data_file(summary['files']['roles']) if 'files' in summary and 'roles' in summary['files'] else [],
+        "members": load_data_file(summary['files']['members']) if 'files' in summary and 'members' in summary['files'] else [],
+        "events": load_data_file(summary['files']['events']) if 'files' in summary and 'events' in summary['files'] else []
     }
     
     return jsonify(result)
