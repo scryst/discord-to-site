@@ -1,12 +1,22 @@
 import os
 import requests
 import json
+import shutil
 from pathlib import Path
 
 # Configuration
-RENDER_API_URL = "https://discord-to-site-api.onrender.com/api/upload"
+RENDER_API_URL = "https://discord-to-site-api.onrender.com"
 SERVER_DATA_DIR = "server_data"
-API_KEY = "your_api_key"  # You would need to implement this in your API
+
+def create_server_data_directory():
+    """Create a server_data directory on Render by making an API call"""
+    try:
+        response = requests.post(f"{RENDER_API_URL}/api/create_directory")
+        print(f"Create directory response: {response.status_code} - {response.text}")
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Error creating directory: {e}")
+        return False
 
 def upload_files():
     """Upload all JSON files from server_data directory to Render"""
@@ -19,32 +29,35 @@ def upload_files():
     
     print(f"Found {len(json_files)} JSON files to upload")
     
-    # For each file, read its contents and upload to Render
-    for file_path in json_files:
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                file_data = json.load(f)
-            
-            # Create payload
-            payload = {
-                "filename": file_path.name,
-                "data": file_data,
-                "api_key": API_KEY
-            }
-            
-            # Upload to Render
-            print(f"Uploading {file_path.name}...")
-            response = requests.post(RENDER_API_URL, json=payload)
-            
-            if response.status_code == 200:
-                print(f"Successfully uploaded {file_path.name}")
-            else:
-                print(f"Failed to upload {file_path.name}: {response.status_code} - {response.text}")
-        
-        except Exception as e:
-            print(f"Error uploading {file_path.name}: {e}")
+    # Create a temporary zip file of the server_data directory
+    zip_path = "server_data.zip"
+    shutil.make_archive("server_data", 'zip', SERVER_DATA_DIR)
     
-    print("Upload complete")
+    print(f"Created zip file at {zip_path}")
+    
+    # Upload the zip file to Render
+    try:
+        with open(zip_path, 'rb') as zip_file:
+            files = {'file': zip_file}
+            response = requests.post(f"{RENDER_API_URL}/api/upload_data", files=files)
+            
+        if response.status_code == 200:
+            print(f"Successfully uploaded data: {response.text}")
+        else:
+            print(f"Failed to upload data: {response.status_code} - {response.text}")
+    
+    except Exception as e:
+        print(f"Error uploading data: {e}")
+    
+    # Clean up the temporary zip file
+    try:
+        os.remove(zip_path)
+        print(f"Removed temporary zip file {zip_path}")
+    except Exception as e:
+        print(f"Error removing zip file: {e}")
 
 if __name__ == "__main__":
+    print("Starting data upload to Render...")
+    create_server_data_directory()
     upload_files()
+    print("Upload process completed")

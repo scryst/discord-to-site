@@ -1,8 +1,10 @@
 import os
 import json
-from flask import Flask, render_template, jsonify, request
+import zipfile
+from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
 from src.config import EXPORT_DIR
+from werkzeug.utils import secure_filename
 
 # Create export directory if it doesn't exist
 os.makedirs(EXPORT_DIR, exist_ok=True)
@@ -130,6 +132,47 @@ def create_app():
     def api_health():
         """Health check endpoint"""
         return jsonify({"status": "ok", "version": "1.0.0"})
+    
+    @app.route('/api/create_directory', methods=['POST'])
+    def api_create_directory():
+        """Create the server_data directory if it doesn't exist"""
+        try:
+            os.makedirs(EXPORT_DIR, exist_ok=True)
+            return jsonify({"status": "success", "message": f"Directory {EXPORT_DIR} created or already exists"})
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+    
+    @app.route('/api/upload_data', methods=['POST'])
+    def api_upload_data():
+        """Upload server data as a zip file"""
+        if 'file' not in request.files:
+            return jsonify({"status": "error", "message": "No file part"}), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({"status": "error", "message": "No selected file"}), 400
+        
+        if file:
+            try:
+                # Save the zip file temporarily
+                zip_path = os.path.join(os.path.dirname(EXPORT_DIR), 'temp.zip')
+                file.save(zip_path)
+                
+                # Extract the zip file to the server_data directory
+                with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                    zip_ref.extractall(os.path.dirname(EXPORT_DIR))
+                
+                # Remove the temporary zip file
+                os.remove(zip_path)
+                
+                return jsonify({
+                    "status": "success", 
+                    "message": "Data uploaded and extracted successfully",
+                    "files": os.listdir(EXPORT_DIR)
+                })
+            except Exception as e:
+                return jsonify({"status": "error", "message": str(e)}), 500
     
     return app
 
