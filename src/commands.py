@@ -24,8 +24,8 @@ class ServerInfoCommands(commands.Cog):
         if guild.icon:
             embed.set_thumbnail(url=guild.icon.url)
         
-        # Add basic server stats
-        embed.add_field(name="Owner", value=guild.owner.mention, inline=True)
+        # Add basic server stats - avoid pinging the owner
+        embed.add_field(name="Owner", value=f"{guild.owner.name}#{guild.owner.discriminator}" if hasattr(guild.owner, "discriminator") else guild.owner.name, inline=True)
         embed.add_field(name="Created On", value=guild.created_at.strftime("%Y-%m-%d"), inline=True)
         embed.add_field(name="Member Count", value=guild.member_count, inline=True)
         
