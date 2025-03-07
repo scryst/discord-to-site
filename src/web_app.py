@@ -36,14 +36,12 @@ def create_app():
                 import importlib
                 main_module = importlib.import_module('main')
                 bot_instance = main_module.bot
-                bot_thread = threading.Thread(target=main_module.run_bot)
-                bot_thread.daemon = True
-                bot_thread.start()
-                print("Discord bot started in a separate thread")
+                # Don't start the bot here, it's already started in main.py
+                print("Discord bot instance connected from main module")
             except Exception as e:
-                print(f"Error starting Discord bot: {e}")
+                print(f"Error connecting to Discord bot: {e}")
     
-    # Start the Discord bot when the app is created
+    # Connect to the Discord bot when the app is created
     start_discord_bot()
     
     def get_latest_export():

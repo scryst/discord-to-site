@@ -189,7 +189,9 @@ class ServerInfoCommands(commands.Cog):
 # Standalone export function for API calls
 async def export_server_data(ctx):
     """Export comprehensive server data to JSON files (standalone version)"""
-    from main import bot
+    # Use bot_instance from web_app instead of importing from main
+    # to avoid circular imports and doubled bot instances
+    from src.web_app import bot_instance as bot
     
     if not bot or not bot.guilds:
         if hasattr(ctx, 'send'):
