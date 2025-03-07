@@ -1,12 +1,46 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from src.exporters import export_all
+import datetime
 
 class ServerInfoCommands(commands.Cog):
     """Commands for fetching and exporting server information"""
     
     def __init__(self, bot):
         self.bot = bot
+        # Start the scheduled export task
+        self.scheduled_export.start()
+    
+    def cog_unload(self):
+        # Make sure to cancel the task when the cog is unloaded
+        self.scheduled_export.cancel()
+    
+    @tasks.loop(hours=6)  # Run every 6 hours
+    async def scheduled_export(self):
+        """Automatically export server data on a schedule"""
+        # Wait until the bot is ready before starting the task
+        await self.bot.wait_until_ready()
+        
+        # Only run if the bot is in at least one guild
+        if not self.bot.guilds:
+            print("Scheduled export: No guilds available")
+            return
+            
+        guild = self.bot.guilds[0]
+        print(f"Scheduled export: Starting automatic export for {guild.name} at {datetime.datetime.now()}")
+        
+        try:
+            # Export all server data
+            summary_path = await export_all(guild)
+            print(f"Scheduled export: Completed successfully. Summary file: {summary_path}")
+        except Exception as e:
+            print(f"Scheduled export: Error during export: {str(e)}")
+    
+    @scheduled_export.before_loop
+    async def before_scheduled_export(self):
+        """Wait until the bot is ready before starting the scheduled task"""
+        await self.bot.wait_until_ready()
+        print(f"Scheduled export: Task initialized, will run every 6 hours")
     
     @commands.command(name='server_info')
     async def server_info(self, ctx):
@@ -79,6 +113,74 @@ class ServerInfoCommands(commands.Cog):
     @export_server_data.error
     async def export_server_data_error(self, ctx, error):
         """Error handler for the export command"""
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You need administrator permissions to use this command.")
+        else:
+            await ctx.send(f"An error occurred: {str(error)}")
+
+    @commands.command(name='schedule')
+    @commands.has_permissions(administrator=True)  # Only admins can use this command
+    async def schedule_command(self, ctx, action="status"):
+        """Control the scheduled export (status, start, stop, interval)"""
+        action = action.lower()
+        
+        if action == "status":
+            status = "running" if self.scheduled_export.is_running() else "stopped"
+            next_run = self.scheduled_export.next_iteration
+            next_run_str = next_run.strftime("%Y-%m-%d %H:%M:%S") if next_run else "N/A"
+            interval = f"{self.scheduled_export.hours} hours"
+            
+            embed = discord.Embed(
+                title="Scheduled Export Status",
+                description=f"The scheduled export task is currently **{status}**.",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="Interval", value=interval, inline=True)
+            embed.add_field(name="Next Run", value=next_run_str, inline=True)
+            
+            await ctx.send(embed=embed)
+            
+        elif action == "start":
+            if not self.scheduled_export.is_running():
+                self.scheduled_export.start()
+                await ctx.send("✅ Scheduled export task started.")
+            else:
+                await ctx.send("⚠️ Scheduled export task is already running.")
+                
+        elif action == "stop":
+            if self.scheduled_export.is_running():
+                self.scheduled_export.cancel()
+                await ctx.send("🛑 Scheduled export task stopped.")
+            else:
+                await ctx.send("⚠️ Scheduled export task is already stopped.")
+                
+        elif action.startswith("interval:"):
+            try:
+                # Extract the hours from the command (e.g., "interval:12" sets it to 12 hours)
+                hours = int(action.split(":")[1])
+                if hours < 1:
+                    await ctx.send("⚠️ Interval must be at least 1 hour.")
+                    return
+                    
+                # Restart the task with the new interval
+                was_running = self.scheduled_export.is_running()
+                if was_running:
+                    self.scheduled_export.cancel()
+                    
+                self.scheduled_export.change_interval(hours=hours)
+                
+                if was_running:
+                    self.scheduled_export.start()
+                    
+                await ctx.send(f"⏱️ Scheduled export interval changed to {hours} hours.")
+            except (IndexError, ValueError):
+                await ctx.send("⚠️ Invalid interval format. Use `!schedule interval:6` to set a 6-hour interval.")
+        else:
+            await ctx.send("⚠️ Unknown action. Available actions: status, start, stop, interval:X")
+    
+    @schedule_command.error
+    async def schedule_command_error(self, ctx, error):
+        """Error handler for the schedule command"""
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("You need administrator permissions to use this command.")
         else:

@@ -9,6 +9,7 @@ This project allows you to export information from a Discord server (channels, r
 - Real-time data about online members and active channels
 - API endpoints for accessing Discord server data
 - Automated export functionality via API
+- Scheduled exports every 6 hours (configurable)
 - CORS support for cross-origin requests
 - Robust error handling and logging
 - Deployment support for Render
@@ -96,6 +97,11 @@ This project allows you to export information from a Discord server (channels, r
 
 - `!server_info` - Display basic server information
 - `!export` - Export comprehensive server data (admin only)
+- `!schedule` - Control the scheduled export task (admin only)
+  - `!schedule status` - Check the status of scheduled exports
+  - `!schedule start` - Start the scheduled export task
+  - `!schedule stop` - Stop the scheduled export task
+  - `!schedule interval:X` - Change the interval to X hours (e.g., `!schedule interval:12`)
 
 ### API Endpoints
 
