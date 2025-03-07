@@ -1,1 +1,1 @@
-web: gunicorn "src.web_app:create_app()" & python main.py
+web: gunicorn --preload "src.web_app:create_app()"

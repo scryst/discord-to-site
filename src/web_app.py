@@ -1,6 +1,8 @@
 import os
 import json
 import zipfile
+import threading
+import asyncio
 from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
 from src.config import EXPORT_DIR
@@ -8,6 +10,10 @@ from werkzeug.utils import secure_filename
 
 # Create export directory if it doesn't exist
 os.makedirs(EXPORT_DIR, exist_ok=True)
+
+# Global variable to track if bot is already running
+bot_started = False
+bot_instance = None
 
 def create_app():
     """Create and configure the Flask application"""
@@ -17,6 +23,24 @@ def create_app():
 
     # Enable CORS for all routes, but restrict to specific domains in production
     CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://coffeechatventures.com"]}})
+    
+    # Start the Discord bot in a separate thread
+    def start_discord_bot():
+        global bot_started, bot_instance
+        if not bot_started:
+            bot_started = True
+            try:
+                from main import run_bot, bot
+                bot_instance = bot
+                bot_thread = threading.Thread(target=run_bot)
+                bot_thread.daemon = True
+                bot_thread.start()
+                print("Discord bot started in a separate thread")
+            except Exception as e:
+                print(f"Error starting Discord bot: {e}")
+    
+    # Start the Discord bot when the app is created
+    start_discord_bot()
     
     def get_latest_export():
         """Get the latest export summary file"""
@@ -31,8 +55,12 @@ def create_app():
         # Sort by timestamp (which is part of the filename)
         latest_summary = sorted(summary_files, reverse=True)[0]
         
-        with open(os.path.join(EXPORT_DIR, latest_summary), 'r', encoding='utf-8') as f:
-            return json.load(f)
+        try:
+            with open(os.path.join(EXPORT_DIR, latest_summary), 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading summary file: {e}")
+            return None
 
     def load_data_file(filepath):
         """Load data from a JSON file"""
@@ -118,20 +146,30 @@ def create_app():
         if not summary:
             return jsonify({"error": "No export data found", "status": "waiting_for_data"})
         
-        result = {
-            "summary": summary,
-            "channels": load_data_file(summary['files']['channels']) if 'files' in summary and 'channels' in summary['files'] else [],
-            "roles": load_data_file(summary['files']['roles']) if 'files' in summary and 'roles' in summary['files'] else [],
-            "members": load_data_file(summary['files']['members']) if 'files' in summary and 'members' in summary['files'] else [],
-            "events": load_data_file(summary['files']['events']) if 'files' in summary and 'events' in summary['files'] else []
-        }
-        
-        return jsonify(result)
+        try:
+            result = {
+                "summary": summary,
+                "channels": load_data_file(summary['files']['channels']) if 'files' in summary and 'channels' in summary['files'] else [],
+                "roles": load_data_file(summary['files']['roles']) if 'files' in summary and 'roles' in summary['files'] else [],
+                "members": load_data_file(summary['files']['members']) if 'files' in summary and 'members' in summary['files'] else [],
+                "events": load_data_file(summary['files']['events']) if 'files' in summary and 'events' in summary['files'] else []
+            }
+            
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error in api_all: {e}")
+            return jsonify({"error": str(e), "status": "error"})
 
     @app.route('/api/health')
     def api_health():
         """Health check endpoint"""
-        return jsonify({"status": "ok", "version": "1.0.0"})
+        return jsonify({
+            "status": "ok", 
+            "version": "1.0.0",
+            "bot_running": bot_started,
+            "export_dir_exists": os.path.exists(EXPORT_DIR),
+            "export_files": os.listdir(EXPORT_DIR) if os.path.exists(EXPORT_DIR) else []
+        })
     
     @app.route('/api/create_directory', methods=['POST'])
     def api_create_directory():
@@ -173,6 +211,35 @@ def create_app():
                 })
             except Exception as e:
                 return jsonify({"status": "error", "message": str(e)}), 500
+    
+    @app.route('/api/trigger_export', methods=['POST'])
+    def api_trigger_export():
+        """Trigger a Discord data export"""
+        try:
+            # Import here to avoid circular imports
+            import importlib
+            commands_module = importlib.import_module('src.commands')
+            
+            # Create a dummy context
+            class DummyContext:
+                async def send(self, message):
+                    print(f"API Export: {message}")
+            
+            # Create a background thread to run the export
+            def run_export():
+                asyncio.run(commands_module.export_server_data(DummyContext()))
+            
+            export_thread = threading.Thread(target=run_export)
+            export_thread.daemon = True
+            export_thread.start()
+            
+            return jsonify({
+                "status": "success",
+                "message": "Export triggered successfully in background thread"
+            })
+        except Exception as e:
+            print(f"Error triggering export: {e}")
+            return jsonify({"status": "error", "message": str(e)}), 500
     
     return app
 

@@ -47,16 +47,34 @@ class ServerInfoCommands(commands.Cog):
     @commands.has_permissions(administrator=True)  # Only admins can use this command
     async def export_server_data(self, ctx):
         """Export comprehensive server data to JSON files"""
-        guild = ctx.guild
-        await ctx.send("Starting server data export. This may take a moment...")
-        
-        try:
-            # Export all server data
-            summary_path = await export_all(guild)
+        if hasattr(ctx, 'guild') and ctx.guild:
+            guild = ctx.guild
+            await ctx.send("Starting server data export. This may take a moment...")
             
-            await ctx.send(f"Server data export complete! Check the `server_data` folder.\nSummary file: `{summary_path}`")
-        except Exception as e:
-            await ctx.send(f"Error during export: {str(e)}")
+            try:
+                # Export all server data
+                summary_path = await export_all(guild)
+                
+                await ctx.send(f"Server data export complete! Check the `server_data` folder.\nSummary file: `{summary_path}`")
+            except Exception as e:
+                await ctx.send(f"Error during export: {str(e)}")
+        else:
+            # This is likely an API call without a guild context
+            # Get the first guild the bot is in
+            if not hasattr(self, 'bot') or not self.bot or not self.bot.guilds:
+                await ctx.send("No guilds available for export")
+                return
+                
+            guild = self.bot.guilds[0]
+            await ctx.send(f"Starting server data export for {guild.name}. This may take a moment...")
+            
+            try:
+                # Export all server data
+                summary_path = await export_all(guild)
+                
+                await ctx.send(f"Server data export complete! Check the `server_data` folder.\nSummary file: `{summary_path}`")
+            except Exception as e:
+                await ctx.send(f"Error during export: {str(e)}")
     
     @export_server_data.error
     async def export_server_data_error(self, ctx, error):
@@ -65,6 +83,33 @@ class ServerInfoCommands(commands.Cog):
             await ctx.send("You need administrator permissions to use this command.")
         else:
             await ctx.send(f"An error occurred: {str(error)}")
+
+# Standalone export function for API calls
+async def export_server_data(ctx):
+    """Export comprehensive server data to JSON files (standalone version)"""
+    from main import bot
+    
+    if not bot or not bot.guilds:
+        if hasattr(ctx, 'send'):
+            await ctx.send("No guilds available for export")
+        return None
+    
+    guild = bot.guilds[0]
+    if hasattr(ctx, 'send'):
+        await ctx.send(f"Starting server data export for {guild.name}. This may take a moment...")
+    
+    try:
+        # Export all server data
+        summary_path = await export_all(guild)
+        
+        if hasattr(ctx, 'send'):
+            await ctx.send(f"Server data export complete! Check the `server_data` folder.\nSummary file: `{summary_path}`")
+        
+        return summary_path
+    except Exception as e:
+        if hasattr(ctx, 'send'):
+            await ctx.send(f"Error during export: {str(e)}")
+        return None
 
 async def setup(bot):
     """Add the ServerInfoCommands cog to the bot"""
